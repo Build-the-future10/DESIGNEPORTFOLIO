@@ -1,0 +1,21 @@
+body {
+    background: #f7cb9c;
+    text-align: right;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    color-interpolation-filters: --primary-color;
+}
+
+:root {
+    --base-color-light: #F5F5F5;
+    --header-text-light: #00;
+    --sub-text-light: #000000;
+
+    --base-color-dark: #000000;
+    --header-text-dark: #00c362;
+    --sub-text-dark: #F5F5F5;
+}
+
+body {
+    background-color: var(--base-color-light);
+}
