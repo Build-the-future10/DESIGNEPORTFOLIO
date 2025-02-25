@@ -1,41 +1,50 @@
+/* Define CSS Variables */
+:root {
+    --base-color: #f7cb9c;  /* Background */
+    --text-color: #000000;  /* Main Text */
+    --nav-bg-color: #333;   /* Navbar Background */
+    --nav-text-color: white; /* Navbar Text */
+    --nav-hover-bg: #555;   /* Navbar Hover */
+}
+
+/* Apply Colors */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #8b0000; /* Dark red background */
-    color: white;
-    text-align: center;
-    transition: background 0.3s ease;
+    background-color: var(--base-color);
+    color: var(--text-color);
+    text-align: right;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
 }
 
+/* Navigation Bar */
 nav {
-    display: flex;
-    justify-content: space-between;
+    background-color: var(--nav-bg-color);
     padding: 15px;
-    background: black;
+    text-align: center;
 }
 
-.nav-links a {
-    color: white;
+nav a {
+    color: var(--nav-text-color);
     text-decoration: none;
-    margin: 0 15px;
+    padding: 14px 20px;
+    margin: 0 10px;
+    font-size: 18px;
 }
 
-button {
-    background: black;
-    color: white;
-    padding: 10px;
-    border: none;
-    cursor: pointer;
+nav a:hover {
+    background-color: var(--nav-hover-bg);
+    border-radius: 5px;
 }
 
-.login-container {
-    background: white;
-    color: black;
-    padding: 20px;
-    width: 300px;
-    margin: auto;
-    border-radius: 8px;
+/* Heading */
+h1 {
+    text-align: center;
+    margin-top: 20px;
 }
 
-.dark-mode {
-    background: black;
+/* Content Styling */
+.content {
+    text-align: center;
+    margin: 20px auto;
+    width: 60%;
 }
