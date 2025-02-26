@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Auth Page</title>
     <style>
         :root {
-            --base-color: #a63d2c;  /* Red background */
-            --text-color: #000000;  /* Main text */
-            --input-bg: #ffffff;    /* Input background */
+            --base-color: #a63d2c;
+            --text-color: #000000;
+            --input-bg: #ffffff;
             --padding: 20px;
             --border-radius: 20px;
             --animation-color: #a63d2c;
@@ -23,9 +23,10 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden;
         }
 
-        .login-container {
+        .auth-container {
             background-color: var(--base-color);
             padding: var(--padding);
             border-radius: var(--border-radius);
@@ -34,73 +35,80 @@
             position: relative;
         }
 
-        .login-container h1 {
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
+        h1 { font-size: 32px; font-weight: bold; margin-bottom: 20px; }
+        label { display: block; font-size: 18px; margin-bottom: 10px; }
+        input { width: 90%; padding: 10px; margin-bottom: 15px; border: none; border-radius: 10px; background-color: var(--input-bg); font-size: 16px; }
+        a { display: block; font-size: 16px; color: var(--text-color); text-decoration: none; margin: 10px 0; }
+        a:hover { text-decoration: underline; }
 
-        .login-container label {
-            display: block;
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
+        .toggle-btn { margin-top: 10px; cursor: pointer; font-size: 14px; color: white; text-decoration: underline; }
 
-        .login-container input {
-            width: 90%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: none;
-            border-radius: 10px;
-            background-color: var(--input-bg);
-            font-size: 16px;
-        }
-
-        .login-container a {
-            display: block;
-            font-size: 16px;
-            color: var(--text-color);
-            text-decoration: none;
-            margin: 10px 0;
-        }
-
-        .login-container a:hover {
-            text-decoration: underline;
-        }
-
-        .animated-element {
+        .falling-square {
             position: absolute;
-            width: 50px;
-            height: 25px;
+            width: 20px;
+            height: 20px;
             background-color: var(--animation-color);
-            border-radius: 15px;
-            animation: move 5s infinite alternate;
+            animation: fall linear infinite;
         }
 
-        @keyframes move {
-            from { left: 10px; }
-            to { left: calc(100% - 60px); }
+        @keyframes fall {
+            from { transform: translateY(-50px); opacity: 1; }
+            to { transform: translateY(100vh); opacity: 0; }
         }
-
-        .top-left { top: 10px; left: -60px; }
-        .top-right { top: 10px; right: -60px; }
-        .bottom-left { bottom: 10px; left: -60px; }
-        .bottom-right { bottom: 10px; right: -60px; }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <h1>Log in</h1>
-        <label for="username">username</label>
-        <input type="text" id="username" name="username">
-        <label for="password">password</label>
-        <input type="password" id="password" name="password">
-        <a href="#">Forgot password?</a>
-        <a href="#">Sign up</a>
-        <div class="animated-element top-left"></div>
-        <div class="animated-element top-right"></div>
-        <div class="animated-element bottom-left"></div>
-        <div class="animated-element bottom-right"></div>
+    <div class="auth-container">
+        <h1 id="form-title">Log in</h1>
+        <form id="auth-form">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password">
+            <a href="#">Forgot password?</a>
+            <a href="#" class="toggle-btn" onclick="toggleForm()">Sign up</a>
+        </form>
     </div>
+
+    <script>
+        function toggleForm() {
+            const title = document.getElementById("form-title");
+            const form = document.getElementById("auth-form");
+            if (title.innerText === "Log in") {
+                title.innerText = "Sign up";
+                form.innerHTML = `
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password">
+                    <a href="#" class="toggle-btn" onclick="toggleForm()">Log in</a>
+                `;
+            } else {
+                title.innerText = "Log in";
+                form.innerHTML = `
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password">
+                    <a href="#">Forgot password?</a>
+                    <a href="#" class="toggle-btn" onclick="toggleForm()">Sign up</a>
+                `;
+            }
+        }
+
+        function createFallingSquares() {
+            for (let i = 0; i < 20; i++) {
+                let square = document.createElement("div");
+                square.className = "falling-square";
+                square.style.left = Math.random() * window.innerWidth + "px";
+                square.style.animationDuration = (2 + Math.random() * 3) + "s";
+                document.body.appendChild(square);
+                setTimeout(() => { square.remove(); }, 5000);
+            }
+        }
+        setInterval(createFallingSquares, 500);
+    </script>
 </body>
 </html>
