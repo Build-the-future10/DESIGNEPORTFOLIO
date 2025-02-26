@@ -1,157 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-    <style>
-        :root {
-            --main-bg: #a63d2c;
-            --login-bg: #832f23;
-            --text-color: #000;
-            --input-bg: #fff;
-            --square-color: #ffcc00;
-            --border-radius: 20px;
-            --padding: 20px;
-        }
+import React, { useState, useEffect } from "react";
+import { createClient } from "@supabase/supabase-js";
+import { motion } from "framer-motion";
+import "tailwindcss/tailwind.css";
 
-        body {
-            background-color: var(--main-bg);
-            color: var(--text-color);
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-            position: relative;
-        }
+const SUPABASE_URL = "your-supabase-url";
+const SUPABASE_ANON_KEY = "your-anon-key";
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        .login-container {
-            background-color: var(--login-bg);
-            padding: var(--padding);
-            border-radius: var(--border-radius);
-            text-align: center;
-            width: 320px;
-            position: relative;
-            z-index: 10;
-            transition: transform 0.3s, padding 0.3s;
-        }
+const LoginPage = () => {
+  const [darkMode, setDarkMode] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
 
-        .login-container:hover {
-            padding: 30px;
-            transform: scale(1.05);
-        }
+  useEffect(() => {
+    document.body.classList.toggle("bg-gray-900", darkMode);
+    document.body.classList.toggle("bg-white", !darkMode);
+  }, [darkMode]);
 
-        .login-container h1 {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
+  const randomColor = () => {
+    const redShades = ["#ff0000", "#cc0000", "#990000", "#660000", "#330000"];
+    const blackShades = ["#000000", "#222222", "#444444", "#666666", "#888888"];
+    return Math.random() > 0.5
+      ? redShades[Math.floor(Math.random() * redShades.length)]
+      : blackShades[Math.floor(Math.random() * blackShades.length)];
+  };
 
-        .login-container label {
-            display: block;
-            font-size: 16px;
-            margin: 10px 0 5px;
-        }
+  const loginUser = async () => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) setError(error.message);
+    else alert("Login successful! Redirecting...");
+  };
 
-        .login-container input {
-            width: 85%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: none;
-            border-radius: 10px;
-            background-color: var(--input-bg);
-            font-size: 16px;
-        }
+  const signUpUser = async () => {
+    const { error } = await supabase.auth.signUp({ email, password });
+    if (error) setError(error.message);
+    else alert("Signup successful! Check your email for verification.");
+  };
 
-        .login-container a {
-            display: block;
-            font-size: 14px;
-            color: var(--text-color);
-            text-decoration: none;
-            margin: 10px 0;
-        }
+  return (
+    <div className={`min-h-screen flex flex-col items-center justify-center transition-colors duration-700 ${darkMode ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
+      <button onClick={() => setDarkMode(!darkMode)} className="absolute top-5 right-5 px-4 py-2 bg-gray-800 text-white rounded-lg transition-all duration-700">
+        Toggle Dark Mode
+      </button>
 
-        .login-container a:hover {
-            text-decoration: underline;
-        }
+      <motion.div
+        className="relative w-96 p-10 rounded-lg shadow-lg transition-colors duration-700"
+        whileHover={{ scale: 1.05 }}
+        style={{ backgroundColor: darkMode ? "#222" : "#f9f9f9" }}
+      >
+        <h2 className="text-2xl font-bold mb-5 text-center">Login</h2>
+        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+        <input
+          type="email"
+          placeholder="Email"
+          className="w-full p-2 mb-3 border rounded-lg"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          className="w-full p-2 mb-3 border rounded-lg"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button onClick={loginUser} className="w-full py-2 mb-2 bg-blue-600 text-white rounded-lg">Login</button>
+        <button onClick={signUpUser} className="w-full py-2 bg-green-600 text-white rounded-lg">Sign Up</button>
+      </motion.div>
 
-        /* Avoid squares in login region */
-        .falling-square {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: var(--square-color);
-            opacity: 0.8;
-            animation: fall linear infinite;
-        }
-
-        @keyframes fall {
-            from { transform: translateY(-10vh); opacity: 1; }
-            to { transform: translateY(110vh); opacity: 0; }
-        }
-
-        .dark-mode {
-            --main-bg: #1a1a1a;
-            --login-bg: #333;
-            --text-color: #fff;
-            --input-bg: #444;
-            --square-color: #ff6699;
-        }
-
-        .toggle-mode {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: 2px solid var(--text-color);
-            color: var(--text-color);
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 10px;
-        }
-
-    </style>
-</head>
-<body>
-    <button class="toggle-mode" onclick="toggleDarkMode()">Toggle Mode</button>
-    <div class="login-container">
-        <h1>Log in</h1>
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password">
-        <a href="#">Forgot password?</a>
-        <a href="#">Sign up</a>
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+        {[...Array(10)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-10 h-10 rounded-lg"
+            style={{ backgroundColor: randomColor(), top: `${Math.random() * 100}%`, left: `${Math.random() * 100}%` }}
+            animate={{ rotate: 360 }}
+            transition={{ repeat: Infinity, duration: Math.random() * 5 + 2 }}
+          />
+        ))}
+      </div>
     </div>
+  );
+};
 
-    <script>
-        function createFallingSquare() {
-            const square = document.createElement("div");
-            square.classList.add("falling-square");
-            document.body.appendChild(square);
-
-            const size = Math.random() * 20 + 10;
-            square.style.width = `${size}px`;
-            square.style.height = `${size}px`;
-            square.style.left = `${Math.random() * 100}vw`;
-            square.style.backgroundColor = ["#ffcc00", "#33cc33", "#3399ff", "#ff6699"][Math.floor(Math.random() * 4)];
-            square.style.animationDuration = `${Math.random() * 3 + 2}s`;
-
-            if (window.innerWidth / 2 - 160 < parseInt(square.style.left) && parseInt(square.style.left) < window.innerWidth / 2 + 160) {
-                square.style.left = "-50px"; // Move out of the login area
-            }
-
-            setTimeout(() => { square.remove(); }, 5000);
-        }
-
-        setInterval(createFallingSquare, 400);
-
-        function toggleDarkMode() {
-            document.body.classList.toggle("dark-mode");
-        }
-    </script>
-</body>
-</html>
+export default LoginPage;
