@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auth Page</title>
+    <title>Login Page</title>
     <style>
         :root {
-            --base-color: #a63d2c;
-            --text-color: #000000;
-            --input-bg: #ffffff;
+            --base-color: #a63d2c;  /* Red background */
+            --text-color: #000000;  /* Main text */
+            --input-bg: #ffffff;    /* Input background */
             --padding: 20px;
             --border-radius: 20px;
-            --animation-color: #a63d2c;
+            --animation-colors: #ffcc00, #33cc33, #3399ff, #ff6699; /* Multiple colors */
         }
 
         body {
@@ -26,89 +26,127 @@
             overflow: hidden;
         }
 
-        .auth-container {
+        .login-container {
             background-color: var(--base-color);
-            padding: var(--padding);
+            padding: 40px;
             border-radius: var(--border-radius);
             text-align: center;
             width: 300px;
             position: relative;
+            z-index: 10;
         }
 
-        h1 { font-size: 32px; font-weight: bold; margin-bottom: 20px; }
-        label { display: block; font-size: 18px; margin-bottom: 10px; }
-        input { width: 90%; padding: 10px; margin-bottom: 15px; border: none; border-radius: 10px; background-color: var(--input-bg); font-size: 16px; }
-        a { display: block; font-size: 16px; color: var(--text-color); text-decoration: none; margin: 10px 0; }
-        a:hover { text-decoration: underline; }
+        .login-container h1 {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
 
-        .toggle-btn { margin-top: 10px; cursor: pointer; font-size: 14px; color: white; text-decoration: underline; }
+        .login-container label {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
 
+        .login-container input {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 10px;
+            background-color: var(--input-bg);
+            font-size: 16px;
+        }
+
+        .login-container a {
+            display: block;
+            font-size: 16px;
+            color: var(--text-color);
+            text-decoration: none;
+            margin: 10px 0;
+        }
+
+        .login-container a:hover {
+            text-decoration: underline;
+        }
+
+        /* Falling squares animation */
         .falling-square {
             position: absolute;
             width: 20px;
             height: 20px;
-            background-color: var(--animation-color);
+            background-color: var(--animation-colors);
+            opacity: 0.8;
             animation: fall linear infinite;
         }
 
         @keyframes fall {
-            from { transform: translateY(-50px); opacity: 1; }
-            to { transform: translateY(100vh); opacity: 0; }
+            from {
+                transform: translateY(-10vh);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(110vh);
+                opacity: 0;
+            }
+        }
+
+        /* Dark Mode */
+        .dark-mode {
+            --base-color: #1a1a1a;
+            --text-color: #ffffff;
+            --input-bg: #333333;
+        }
+
+        .toggle-mode {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: 2px solid var(--text-color);
+            color: var(--text-color);
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="auth-container">
-        <h1 id="form-title">Log in</h1>
-        <form id="auth-form">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password">
-            <a href="#">Forgot password?</a>
-            <a href="#" class="toggle-btn" onclick="toggleForm()">Sign up</a>
-        </form>
+    <button class="toggle-mode" onclick="toggleDarkMode()">Toggle Mode</button>
+    <div class="login-container">
+        <h1>Log in</h1>
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password">
+        <a href="#">Forgot password?</a>
+        <a href="#">Sign up</a>
     </div>
 
     <script>
-        function toggleForm() {
-            const title = document.getElementById("form-title");
-            const form = document.getElementById("auth-form");
-            if (title.innerText === "Log in") {
-                title.innerText = "Sign up";
-                form.innerHTML = `
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password">
-                    <a href="#" class="toggle-btn" onclick="toggleForm()">Log in</a>
-                `;
-            } else {
-                title.innerText = "Log in";
-                form.innerHTML = `
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password">
-                    <a href="#">Forgot password?</a>
-                    <a href="#" class="toggle-btn" onclick="toggleForm()">Sign up</a>
-                `;
-            }
+        function createFallingSquare() {
+            const square = document.createElement("div");
+            square.classList.add("falling-square");
+            document.body.appendChild(square);
+
+            const size = Math.random() * 20 + 10;
+            square.style.width = `${size}px`;
+            square.style.height = `${size}px`;
+            square.style.left = `${Math.random() * 100}vw`;
+            square.style.backgroundColor = ["#ffcc00", "#33cc33", "#3399ff", "#ff6699"][Math.floor(Math.random() * 4)];
+            square.style.animationDuration = `${Math.random() * 3 + 2}s`;
+
+            setTimeout(() => {
+                square.remove();
+            }, 5000);
         }
 
-        function createFallingSquares() {
-            for (let i = 0; i < 20; i++) {
-                let square = document.createElement("div");
-                square.className = "falling-square";
-                square.style.left = Math.random() * window.innerWidth + "px";
-                square.style.animationDuration = (2 + Math.random() * 3) + "s";
-                document.body.appendChild(square);
-                setTimeout(() => { square.remove(); }, 5000);
-            }
+        setInterval(createFallingSquare, 300);
+
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
         }
-        setInterval(createFallingSquares, 500);
     </script>
 </body>
 </html>
+
