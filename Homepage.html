@@ -28,12 +28,14 @@
 body {
     background-color: var(--base-color);
     color: var(--text-color);
-    text-align: right;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 16px;
     transition: background-color 0.3s, color 0.3s;
     overflow: hidden;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* Navigation Bar */
@@ -42,7 +44,9 @@ nav {
     padding: var(--primary-padding);
     text-align: center;
     border-radius: 15px;
-    transition: padding 0.3s;
+    width: 100%;
+    position: relative;
+    z-index: 1000;
 }
 
 nav a {
@@ -73,11 +77,30 @@ h1 {
 }
 
 /* Content Styling */
-.content {
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    margin-top: 20px;
+}
+
+.text-content {
+    flex: 1;
     text-align: right;
-    margin: 20px auto;
-    width: 60%;
-    padding: var(--primary-padding);
+    padding: 20px;
+}
+
+.image-placeholder {
+    flex: 1;
+    width: 300px;
+    height: 200px;
+    background-color: #ccc;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 200px;
+    font-weight: bold;
+    margin-right: 20px;
 }
 
 /* Dark Mode Toggle Button */
@@ -100,46 +123,15 @@ h1 {
     color: white;
 }
 
-/* Dropdown Button */
-.dropdown {
-    position: relative;
-    display: inline-block;
-    margin-right: 20px;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: var(--base-color);
-    min-width: 150px;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-    padding: 10px;
-    border-radius: 5px;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-/* Placeholder for Image */
-.image-placeholder {
-    width: 300px;
-    height: 200px;
-    background-color: #ccc;
-    margin: 20px auto;
-    border-radius: 10px;
-    text-align: center;
-    line-height: 200px;
-    font-weight: bold;
-}
-
 /* Animated Falling Cubes */
 .animated-cube {
     position: absolute;
     width: 20px;
     height: 20px;
-    background-color: rgba(255, 0, 0, 0.7);
+    background-color: var(--nav-bg-color);
     animation: fall linear infinite;
+    top: 0;
+    z-index: 999;
 }
 
 @keyframes fall {
@@ -180,18 +172,12 @@ h1 {
         <a href="#">Contact</a>
     </nav>
     <h1>Brain Train</h1>
-    <div class="content">
-        <p>Welcome to BrainTrain; a platform designated towards empowering the intellectual capabilities and amplitude of today's generation</p>
-        <p>Learn more?</p>
-    </div>
-    <div class="dropdown">
-        <button class="toggle-button">More Options</button>
-        <div class="dropdown-content">
-            <p>About Us</p>
-            <p>Courses</p>
-            <p>Blog</p>
+    <div class="container">
+        <div class="image-placeholder">Image Placeholder</div>
+        <div class="text-content">
+            <p>Welcome to BrainTrain; a platform designated towards empowering the intellectual capabilities and amplitude of today's generation</p>
+            <p>Learn more?</p>
         </div>
     </div>
-    <div class="image-placeholder">Image Placeholder</div>
 </body>
 </html>
