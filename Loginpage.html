@@ -1,92 +1,82 @@
 import React, { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { motion } from "framer-motion";
 import "tailwindcss/tailwind.css";
 
-// Use environment variables for security (Replace with your method to access them)
+// Supabase credentials (Use environment variables)
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const LoginPage = () => {
-  const [darkMode, setDarkMode] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
+    const [darkMode, setDarkMode] = useState(false);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState(null);
 
-  useEffect(() => {
-    document.body.classList.toggle("bg-gray-900", darkMode);
-    document.body.classList.toggle("bg-white", !darkMode);
-  }, [darkMode]);
+    useEffect(() => {
+        document.body.classList.toggle("bg-gray-900", darkMode);
+        document.body.classList.toggle("bg-white", !darkMode);
+    }, [darkMode]);
 
-  const randomColor = () => {
-    const redShades = ["#ff0000", "#cc0000", "#990000", "#660000", "#330000"];
-    const blackShades = ["#000000", "#222222", "#444444", "#666666", "#888888"];
-    return Math.random() > 0.5
-      ? redShades[Math.floor(Math.random() * redShades.length)]
-      : blackShades[Math.floor(Math.random() * blackShades.length)];
-  };
+    const loginUser = async () => {
+        setError(null);
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) setError(error.message);
+        else alert("Login successful! Redirecting...");
+    };
 
-  const loginUser = async () => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) setError(error.message);
-    else alert("Login successful! Redirecting...");
-  };
+    const signUpUser = async () => {
+        setError(null);
+        const { error } = await supabase.auth.signUp({ email, password });
+        if (error) setError(error.message);
+        else alert("Signup successful! Check your email for verification.");
+    };
 
-  const signUpUser = async () => {
-    const { error } = await supabase.auth.signUp({ email, password });
-    if (error) setError(error.message);
-    else alert("Signup successful! Check your email for verification.");
-  };
+    return (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md w-96">
+                <h2 className="text-2xl font-semibold text-gray-800 dark:text-white text-center">Login</h2>
 
-  return (
-    <div className={`min-h-screen flex flex-col items-center justify-center transition-colors duration-700 ${darkMode ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
-      <button onClick={() => setDarkMode(!darkMode)} className="absolute top-5 right-5 px-4 py-2 bg-gray-800 text-white rounded-lg transition-all duration-700">
-        Toggle Dark Mode
-      </button>
+                {error && <p className="text-red-500 text-sm text-center mt-2">{error}</p>}
 
-      <motion.div
-        className="relative w-96 p-10 rounded-lg shadow-lg transition-colors duration-700"
-        whileHover={{ scale: 1.05 }}
-        style={{ backgroundColor: darkMode ? "#222" : "#f9f9f9" }}
-      >
-        <h2 className="text-2xl font-bold mb-5 text-center">Login</h2>
-        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
-        <input
-          type="email"
-          placeholder="Email"
-          className={`w-full p-2 mb-3 border rounded-lg transition-all duration-300 ${
-            darkMode ? "bg-gray-800 text-white border-gray-600" : "bg-white text-black border-gray-300"
-          }`}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className={`w-full p-2 mb-3 border rounded-lg transition-all duration-300 ${
-            darkMode ? "bg-gray-800 text-white border-gray-600" : "bg-white text-black border-gray-300"
-          }`}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button onClick={loginUser} className="w-full py-2 mb-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Login</button>
-        <button onClick={signUpUser} className="w-full py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Sign Up</button>
-      </motion.div>
+                <div className="mt-4">
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                </div>
 
-      {/* Background Animation */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        {[...Array(10)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-10 h-10 rounded-lg"
-            style={{ backgroundColor: randomColor(), top: `${Math.random() * 100}%`, left: `${Math.random() * 100}%` }}
-            animate={{ rotate: 360 }}
-            transition={{ repeat: Infinity, duration: Math.random() * 5 + 2 }}
-          />
-        ))}
-      </div>
-    </div>
-  );
+                <div className="mt-2">
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                </div>
+
+                <div className="mt-4 flex justify-between">
+                    <button onClick={loginUser} className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                        Login
+                    </button>
+                    <button onClick={signUpUser} className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
+                        Sign Up
+                    </button>
+                </div>
+
+                <button
+                    onClick={() => setDarkMode(!darkMode)}
+                    className="mt-4 w-full text-sm text-gray-500 dark:text-gray-400"
+                >
+                    Toggle Dark Mode
+                </button>
+            </div>
+        </div>
+    );
 };
 
 export default LoginPage;
-
