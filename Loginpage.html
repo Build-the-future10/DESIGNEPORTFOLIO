@@ -3,9 +3,10 @@ import { createClient } from "@supabase/supabase-js";
 import { motion } from "framer-motion";
 import "tailwindcss/tailwind.css";
 
-const SUPABASE_URL = "https://fdoaptkwqcxwwwhcglil.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZkb2FwdGt3cWN4d3d3aGNnbGlsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA1NjAzMzEsImV4cCI6MjA1NjEzNjMzMX0._jIpIpHnVTh3jNCP2d2UH1ByTzDxaiYgwjoQaHSULgQ";
-const supabase = createClient(https://fdoaptkwqcxwwwhcglil.supabase.co, eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZkb2FwdGt3cWN4d3d3aGNnbGlsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA1NjAzMzEsImV4cCI6MjA1NjEzNjMzMX0._jIpIpHnVTh3jNCP2d2UH1ByTzDxaiYgwjoQaHSULgQ);
+// Use environment variables for security (Replace with your method to access them)
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const LoginPage = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -54,20 +55,25 @@ const LoginPage = () => {
         <input
           type="email"
           placeholder="Email"
-          className="w-full p-2 mb-3 border rounded-lg"
+          className={`w-full p-2 mb-3 border rounded-lg transition-all duration-300 ${
+            darkMode ? "bg-gray-800 text-white border-gray-600" : "bg-white text-black border-gray-300"
+          }`}
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
           type="password"
           placeholder="Password"
-          className="w-full p-2 mb-3 border rounded-lg"
+          className={`w-full p-2 mb-3 border rounded-lg transition-all duration-300 ${
+            darkMode ? "bg-gray-800 text-white border-gray-600" : "bg-white text-black border-gray-300"
+          }`}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button onClick={loginUser} className="w-full py-2 mb-2 bg-blue-600 text-white rounded-lg">Login</button>
-        <button onClick={signUpUser} className="w-full py-2 bg-green-600 text-white rounded-lg">Sign Up</button>
+        <button onClick={loginUser} className="w-full py-2 mb-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Login</button>
+        <button onClick={signUpUser} className="w-full py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Sign Up</button>
       </motion.div>
 
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+      {/* Background Animation */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
         {[...Array(10)].map((_, i) => (
           <motion.div
             key={i}
@@ -83,3 +89,4 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+
