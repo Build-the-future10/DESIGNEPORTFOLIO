@@ -70,6 +70,8 @@
             padding: 20px;
             text-align: center;
             transition: transform 0.3s ease-in-out, box-shadow 0.3s;
+            position: relative;
+            z-index: 10;
         }
 
         .login-box:hover {
@@ -132,7 +134,7 @@
         }
 
         @keyframes fall {
-            0% { transform: translateY(-10vh) rotate(0deg); }
+            0% { transform: translateY(0vh) rotate(0deg); }
             100% { transform: translateY(100vh) rotate(360deg); }
         }
     </style>
@@ -179,7 +181,24 @@
                 let cube = document.createElement("div");
                 cube.classList.add("cube");
                 document.body.appendChild(cube);
-                cube.style.left = Math.random() * 100 + "vw";
+
+                let startX;
+                let screenWidth = window.innerWidth;
+
+                // Ensure cubes do not spawn in the login box area
+                if (screenWidth > 600) {
+                    let loginBoxStart = screenWidth / 2 - 175;
+                    let loginBoxEnd = screenWidth / 2 + 175;
+
+                    do {
+                        startX = Math.random() * 100;
+                    } while (startX > (loginBoxStart / screenWidth * 100) && startX < (loginBoxEnd / screenWidth * 100));
+                } else {
+                    startX = Math.random() * 100;
+                }
+
+                cube.style.left = startX + "vw";
+                cube.style.top = "60px"; // Start just below the navbar
                 cube.style.animationDuration = Math.random() * 5 + 3 + "s";
                 cube.style.animationDelay = Math.random() * 2 + "s";
                 cube.style.background = `rgba(${Math.floor(Math.random() * 100) + 150}, 50, 50, 0.8)`;
@@ -190,4 +209,3 @@
     </script>
 </body>
 </html>
-
