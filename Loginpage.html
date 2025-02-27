@@ -1,82 +1,62 @@
-import React, { useState, useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
-import "tailwindcss/tailwind.css";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        input, button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="loginUser()">Login</button>
+        <button onclick="signUpUser()">Sign Up</button>
+        <p id="message"></p>
+    </div>
+    
+    <script>
+        const SUPABASE_URL = "YOUR_SUPABASE_URL";
+        const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Supabase credentials (Use environment variables)
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        async function loginUser() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            document.getElementById("message").innerText = error ? error.message : "Login successful!";
+        }
 
-const LoginPage = () => {
-    const [darkMode, setDarkMode] = useState(false);
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState(null);
+        async function signUpUser() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const { error } = await supabase.auth.signUp({ email, password });
+            document.getElementById("message").innerText = error ? error.message : "Signup successful! Check your email.";
+        }
+    </script>
+</body>
+</html>
 
-    useEffect(() => {
-        document.body.classList.toggle("bg-gray-900", darkMode);
-        document.body.classList.toggle("bg-white", !darkMode);
-    }, [darkMode]);
-
-    const loginUser = async () => {
-        setError(null);
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) setError(error.message);
-        else alert("Login successful! Redirecting...");
-    };
-
-    const signUpUser = async () => {
-        setError(null);
-        const { error } = await supabase.auth.signUp({ email, password });
-        if (error) setError(error.message);
-        else alert("Signup successful! Check your email for verification.");
-    };
-
-    return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md w-96">
-                <h2 className="text-2xl font-semibold text-gray-800 dark:text-white text-center">Login</h2>
-
-                {error && <p className="text-red-500 text-sm text-center mt-2">{error}</p>}
-
-                <div className="mt-4">
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                </div>
-
-                <div className="mt-2">
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-
-                <div className="mt-4 flex justify-between">
-                    <button onClick={loginUser} className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-                        Login
-                    </button>
-                    <button onClick={signUpUser} className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
-                        Sign Up
-                    </button>
-                </div>
-
-                <button
-                    onClick={() => setDarkMode(!darkMode)}
-                    className="mt-4 w-full text-sm text-gray-500 dark:text-gray-400"
-                >
-                    Toggle Dark Mode
-                </button>
-            </div>
-        </div>
-    );
-};
-
-export default LoginPage;
