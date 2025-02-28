@@ -1,211 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style>
+/* Define CSS Variables */
+:root {
+    --base-color: #f7cb9c; 
+    --text-color: #000000;  
+    --nav-bg-color: #a3332b; 
+    --nav-text-color: white; 
+    --nav-hover-bg: #c94c3d; 
+    --primary-padding: 20px; 
+    --button-bg: #444;
+    --button-text: #fff;
+}
+
+.dark-mode {
+    --base-color: #1e1e1e;  
+    --text-color: #ffffff;
+    --nav-bg-color: #a3332b; 
+    --nav-text-color: white;
+    --nav-hover-bg: #555;
+    --button-bg: #fff;
+    --button-text: #000;
+}
+
+/* Apply Colors */
+body {
+    background-color: var(--base-color);
+    color: var(--text-color);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Navigation Bar */
+nav {
+    background-color: var(--nav-bg-color);
+    padding: var(--primary-padding);
+    text-align: center;
+    border-radius: 15px;
+    width: 100%;
+    position: relative;
+    z-index: 1000;
+    transition: padding 0.3s;
+}
+
+nav a {
+    color: var(--nav-text-color);
+    text-decoration: none;
+    padding: 14px 20px;
+    margin: 0 10px;
+    font-size: 20px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+nav:hover {
+    padding: 30px;
+}
+
+nav a:hover {
+    background-color: var(--nav-hover-bg);
+    border-radius: 10px;
+}
+
+/* Heading */
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 36px;
+    font-weight: bold;
+}
+
+/* Content Styling */
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    margin-top: 20px;
+}
+
+.text-content {
+    flex: 1;
+    text-align: right;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: padding 0.3s;
+}
+
+.text-content:hover {
+    padding: 30px;
+}
+
+.image-placeholder {
+    flex: 1;
+    width: 300px;
+    height: 200px;
+    background-color: #ccc;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 200px;
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+/* Dark Mode Toggle Button */
+.toggle-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.toggle-button:hover {
+    background-color: var(--nav-hover-bg);
+    color: white;
+}
+
+/* Animated Falling Cubes */
+.animated-cube {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: var(--nav-bg-color);
+    animation: fall linear infinite;
+    top: 0;
+    z-index: 999;
+}
+
+@keyframes fall {
+    from {
+        transform: translateY(-10vh);
+    }
+    to {
+        transform: translateY(100vh);
+    }
+}
+</style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-    <style>
-        :root {
-            --base-color: #f7cb9c;
-            --text-color: #000;
-            --nav-bg-color: #a3332b;
-            --nav-text-color: white;
-            --nav-hover-bg: #c94c3d;
-            --button-bg: #444;
-            --button-text: #fff;
-            --box-bg: rgba(255, 255, 255, 0.2);
-        }
-
-        .dark-mode {
-            --base-color: #1e1e1e;
-            --text-color: #fff;
-            --button-bg: #fff;
-            --button-text: #000;
-            --box-bg: rgba(50, 50, 50, 0.8);
-        }
-
-        body {
-            background-color: var(--base-color);
-            color: var(--text-color);
-            font-family: Arial, sans-serif;
-            transition: 0.3s;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: 100vh;
-            justify-content: center;
-        }
-
-        nav {
-            background-color: var(--nav-bg-color);
-            padding: 15px;
-            text-align: center;
-            border-radius: 15px;
-            width: 100%;
-            position: absolute;
-            top: 0;
-        }
-
-        nav a {
-            color: var(--nav-text-color);
-            text-decoration: none;
-            padding: 10px 15px;
-            margin: 0 5px;
-            font-size: 18px;
-            font-weight: bold;
-            display: inline-block;
-        }
-
-        nav a:hover {
-            background-color: var(--nav-hover-bg);
-            border-radius: 10px;
-        }
-
-        .login-box {
-            width: 350px;
-            background: var(--box-bg);
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s;
-            position: relative;
-            z-index: 10;
-        }
-
-        .login-box:hover {
-            transform: scale(1.05);
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-        }
-
-        .login-box input, .login-box button {
-            width: 80%;
-            padding: 10px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        .login-box input {
-            background: white;
-            color: black;
-        }
-
-        .login-box button {
-            background: var(--button-bg);
-            color: var(--button-text);
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .login-box button:hover {
-            background-color: var(--nav-hover-bg);
-        }
-
-        .toggle-button {
-            position: fixed;
-            top: 15px;
-            right: 20px;
-            background-color: var(--button-bg);
-            color: var(--button-text);
-            border: none;
-            padding: 10px 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .toggle-button:hover {
-            background-color: var(--nav-hover-bg);
-            color: white;
-        }
-
-        /* Falling Cubes Animation */
-        .cube {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: rgba(163, 51, 43, 0.8);
-            opacity: 0.8;
-            animation: fall linear infinite;
-        }
-
-        @keyframes fall {
-            0% { transform: translateY(0vh) rotate(0deg); }
-            100% { transform: translateY(100vh) rotate(360deg); }
-        }
-    </style>
-</head>
-<body>
-    <button class="toggle-button" onclick="toggleDarkMode()">Toggle Dark Mode</button>
-    <nav>
-        <a href="Homepage.html">Home</a>
-        <a href="Loginpage.html">Log In</a>
-        <a href="Signup.html">Sign Up</a>
-        <a href="Contact.html">Contact</a>
-    </nav>
-
-    <div class="login-box">
-        <h2>Login</h2>
-        <input type="email" id="email" placeholder="Enter your email" required>
-        <input type="password" id="password" placeholder="Enter your password" required>
-        <button onclick="login()">Login</button>
-    </div>
-
+    <title>BrainTrain</title>
     <script>
         function toggleDarkMode() {
             document.body.classList.toggle("dark-mode");
         }
 
-        async function login() {
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-            
-            const supabaseUrl = "YOUR_SUPABASE_URL";
-            const supabaseKey = "YOUR_SUPABASE_ANON_KEY";
-            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-            
-            let { error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) {
-                alert("Login failed: " + error.message);
-            } else {
-                alert("Login successful! Redirecting...");
-            }
-        }
-
-        function createFallingCubes() {
-            for (let i = 0; i < 15; i++) {
+        function createCubes() {
+            for (let i = 0; i < 20; i++) {
                 let cube = document.createElement("div");
-                cube.classList.add("cube");
+                cube.classList.add("animated-cube");
+                cube.style.left = Math.random() * 100 + "vw";
+                cube.style.animationDuration = Math.random() * 3 + 2 + "s";
                 document.body.appendChild(cube);
-
-                let startX;
-                let screenWidth = window.innerWidth;
-
-                // Ensure cubes do not spawn in the login box area
-                if (screenWidth > 600) {
-                    let loginBoxStart = screenWidth / 2 - 175;
-                    let loginBoxEnd = screenWidth / 2 + 175;
-
-                    do {
-                        startX = Math.random() * 100;
-                    } while (startX > (loginBoxStart / screenWidth * 100) && startX < (loginBoxEnd / screenWidth * 100));
-                } else {
-                    startX = Math.random() * 100;
-                }
-
-                cube.style.left = startX + "vw";
-                cube.style.top = "60px"; // Start just below the navbar
-                cube.style.animationDuration = Math.random() * 5 + 3 + "s";
-                cube.style.animationDelay = Math.random() * 2 + "s";
-                cube.style.background = `rgba(${Math.floor(Math.random() * 100) + 150}, 50, 50, 0.8)`;
             }
         }
-
-        createFallingCubes();
+        window.onload = createCubes;
     </script>
+</head>
+<body>
+    <button class="toggle-button" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">Log In</a>
+        <a href="#">Sign up</a>
+        <a href="#">Contact</a>
+    </nav>
+    <h1>Brain Train</h1>
+    <div class="container">
+        <div class="image-placeholder">Image Placeholder</div>
+        <div class="text-content">
+            <p>Welcome to BrainTrain; a platform designated towards empowering the intellectual capabilities and amplitude of today's generation</p>
+            <p>Learn more?</p>
+        </div>
+    </div>
 </body>
 </html>
