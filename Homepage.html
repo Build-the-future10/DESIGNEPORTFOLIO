@@ -130,8 +130,17 @@ p {
     <title>BrainTrain</title>
     <script>
         function toggleDarkMode() {
-            document.body.classList.toggle("dark-mode");
+            const isDarkMode = document.body.classList.toggle("dark-mode");
+            localStorage.setItem("darkMode", isDarkMode);
         }
+
+        function applyDarkMode() {
+            if (localStorage.getItem("darkMode") === "true") {
+                document.body.classList.add("dark-mode");
+            }
+        }
+        
+        document.addEventListener("DOMContentLoaded", applyDarkMode);
     </script>
 </head>
 <body>
@@ -149,3 +158,4 @@ p {
     </div>
 </body>
 </html>
+
